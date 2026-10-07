@@ -1,0 +1,121 @@
+{
+  "canal": "Det Forsvunne Forge",
+  "modo_roteiro": "capitulos_webdoc",
+  "num_capitulos_webdoc": 3,
+  "duracao_card_capitulo": 2.2,
+  "idioma_conteudo": "norsk (bokmål)",
+  "idioma_whisper": "no",
+  "idioma_gtts": "no",
+  "voz_fallback": "nb-NO-PernilleNeural",
+  "whisper_model_size": "medium",
+  "alinhar_whisper_ao_roteiro": true,
+  "usar_fishaudio": false,
+  "duracao_pausa_frases_ms": 0,
+  "correcoes_pronuncia": {},
+  "numeros_por_extenso_idioma": "no",
+  "regra_numeros_roteiro": "NÚMEROS: escreva TODO número por extenso em norueguês (anos, datas, quantias, porcentagens, horários, ordinais). Ex: 'nitten hundre og syttifire', 'førti prosent', 'første februar', 'tre millioner kroner'. NUNCA use dígitos, '%', 'kr' ou abreviações (f.eks., ca., osv.). Não use travessão solto.",
+  "nota_publico_roteiro": "PÚBLICO: norueguês; narração em norueguês bokmål. Os exemplos neste prompt (Brasil, reais, Joelma etc.) ilustram só o PADRÃO — não os reutilize nem escreva sobre o Brasil a menos que o tema exija. Use contexto, instituições, moeda (kroner) e referências que um norueguês reconhece.",
+  "caracteres_alvo_min": 6000,
+  "caracteres_alvo_max": 7000,
+  "caracteres_por_palavra": 6.2,
+  "duracao_minima_clipe": 7.5,
+  "duracao_maxima_clipe": 10,
+  "duracao_clipe_estrita": true,
+  "duracao_maxima_print_noticia": 10,
+  "duracao_slot_midia_alternativa_min": 7.5,
+  "duracao_slot_midia_alternativa_max": 10,
+  "telegram_traducao_ptbr": {
+    "ativo": true
+  },
+  "telegram_review": {
+    "ativo": true,
+    "timeout_resposta_min": 120
+  },
+  "selecao_tema_telegram": {
+    "ativo": true,
+    "timeout_resposta_min": 120
+  },
+  "destaques_telegram": {
+    "ativo": true,
+    "timeout_resposta_min": 120
+  },
+  "audio_customizado_telegram": {
+    "ativo": true,
+    "obrigatorio": true,
+    "timeout_resposta_min": 240
+  },
+  "max_destaques_por_bloco": 1,
+  "arquivo_temas_usados": "temas_usados_no.json",
+  "arquivo_videos_gerados": "videos_gerados_no.json",
+  "pasta_intro": "assets/no/intro",
+  "pasta_cta": "assets/no/cta",
+  "contexto_pais": {
+    "idioma": "norsk (bokmål)",
+    "nome": "Norge",
+    "nome_busca": "norway",
+    "exemplo_termo_marcado": "norwegian krone banknotes",
+    "exemplo_termo_generico": "money counting hands close up",
+    "exemplo_lugar": "Røros Norge",
+    "exemplo_moeda": "norske kroner sedler"
+  },
+  "metodo_thumbnail": "pexels_agnes",
+  "fonte_thumbnail_arquivo": "assets/fonts/Rowdies-Bold.ttf",
+  "fonte_destaque_arquivo": "assets/fonts/Rowdies-Bold.ttf",
+  "transicoes_video": [
+    "crossfade",
+    "flash",
+    "shadow_wipe"
+  ],
+  "usar_prints_noticia": false,
+  "usar_legenda": true,
+  "volume_musica_fundo": 0.07,
+  "contexto_nicho": "documentário nostálgico sobre o passado: lugares, objetos, hábitos, programas, brinquedos e épocas que marcaram gerações (Noruega principalmente) e que desapareceram ou foram esquecidos",
+  "instrucao_extra_roteiro": "Tom nostálgico, caloroso e sensorial (cheiros, sons, texturas, rotinas), mas factual: datas e números precisam de verificação em fonte confiável antes da publicação. Evite melodrama e clichês de 'bons tempos' genéricos; ancore cada lembrança num detalhe concreto.",
+  "texto_inscricao": "🔔 Abonner for flere undersøkelser som denne!",
+  "hashtag_conteudo": "dokumentar",
+  "tags_padrao": [
+    "norge",
+    "dokumentar",
+    "historie",
+    "mysterium",
+    "forsvunnet"
+  ],
+  "documento_estilo": [
+    "TROQUE: cole aqui 2 a 3 trechos de roteiro em norueguês, no tom que você quer, com números por extenso."
+  ],
+  "temas_reflexao": [
+    "TROQUE: tema 1 do canal",
+    "TROQUE: tema 2 do canal"
+  ],
+  "termos_pesquisa_validados": [
+    "norway fjord aerial",
+    "norwegian village aerial",
+    "oslo city street",
+    "oslo government building",
+    "old wooden house norway",
+    "abandoned building exterior",
+    "abandoned factory interior",
+    "mountain landscape norway",
+    "norway coast sea waves",
+    "foggy forest",
+    "old documents paper desk",
+    "paperwork documents desk",
+    "office workers meeting",
+    "construction site workers",
+    "empty road night",
+    "railway tracks norway",
+    "harbor ships norway",
+    "norwegian krone banknotes",
+    "money counting hands close up",
+    "snowy mountain village",
+    "old photograph archive",
+    "library old books"
+  ],
+  "agendamento_telegram": {
+    "ativo": true,
+    "fuso_horario": "America/Sao_Paulo",
+    "se_sem_resposta": "agora",
+    "timeout_resposta_min": 60,
+    "fuso_exibicao_extra": "Europe/Oslo"
+  }
+}
