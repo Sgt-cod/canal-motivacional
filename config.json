@@ -96,5 +96,10 @@
     "fuso_horario": "America/Sao_Paulo",
     "se_sem_resposta": "agora",
     "timeout_resposta_min": 60
+  },
+  "pexels_busca_telegram": {
+    "ativo": true,
+    "orientation": "landscape",
+    "min_duration": 10
   }
 }
