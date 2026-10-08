@@ -139,13 +139,21 @@ def _enviar_arquivo(metodo, campo_arquivo, caminho, **params):
     return dados['result']
 
 
+def _teclado(botoes):
+    """botoes: lista de (texto, callback_data) → UMA linha; ou lista de listas → várias
+    linhas. Se callback_data começa com 'url:', vira botão de LINK (abre no navegador,
+    não gera callback pro bot)."""
+    linhas = botoes if (botoes and isinstance(botoes[0], list)) else [botoes]
+    def _b(t, d):
+        return {'text': t, 'url': d[4:]} if d.startswith('url:') else {'text': t, 'callback_data': d}
+    return json.dumps({'inline_keyboard': [[_b(t, d) for t, d in linha] for linha in linhas]})
+
+
 def enviar_texto(texto, botoes=None):
-    """botoes: lista de (texto_botao, callback_data) — vira UMA linha de botões inline."""
+    """botoes: ver _teclado()."""
     params = {'chat_id': TELEGRAM_CHAT_ID, 'text': texto}
     if botoes:
-        params['reply_markup'] = json.dumps({
-            'inline_keyboard': [[{'text': t, 'callback_data': d} for t, d in botoes]]
-        })
+        params['reply_markup'] = _teclado(botoes)
     return _chamar('sendMessage', **params)
 
 
@@ -186,6 +194,23 @@ def _traduzir(textos, com_sugestao=False):
     except Exception as e:
         print(f"  ⚠️ Tradução PT-BR indisponível ({e}) — mandando só o texto original")
         return vazio
+
+
+def _url_busca_pexels(termo):
+    """Link de busca de VÍDEOS no site do Pexels já com os filtros do config.json
+    ('pexels_busca_telegram': {"ativo": true, "orientation": "landscape", "min_duration": 10}).
+    Os filtros vão na query string; se o site ignorar algum, a busca ainda abre normalmente."""
+    cfg = _config().get('pexels_busca_telegram', {})
+    if not cfg.get('ativo', False) or not termo:
+        return None
+    from urllib.parse import quote, urlencode
+    filtros = {}
+    if cfg.get('orientation', 'landscape'):
+        filtros['orientation'] = cfg.get('orientation', 'landscape')
+    if cfg.get('min_duration', 10):
+        filtros['min_duration'] = cfg.get('min_duration', 10)
+    url = f"https://www.pexels.com/search/videos/{quote(termo.strip(), safe='')}/"
+    return url + ('?' + urlencode(filtros) if filtros else '')
 
 
 def _quebrar_texto(texto, limite=3800):
@@ -229,9 +254,7 @@ def enviar_midia(caminho, legenda, botoes=None):
     reconhecido cai pra mensagem de texto (nunca derruba a revisão por causa disso)."""
     params = {'chat_id': TELEGRAM_CHAT_ID, 'caption': legenda[:1024]}
     if botoes:
-        params['reply_markup'] = json.dumps({
-            'inline_keyboard': [[{'text': t, 'callback_data': d} for t, d in botoes]]
-        })
+        params['reply_markup'] = _teclado(botoes)
     ext = os.path.splitext(caminho)[1].lower()
     try:
         if ext in ('.jpg', '.jpeg', '.png'):
@@ -637,7 +660,7 @@ def revisar_midia_pipeline(lista_clipes, texto_segmento, palavras_tempo, nome_se
     trechos = [_trecho_do_roteiro(texto_segmento, palavras_tempo,
                                   c['inicio'], c['inicio'] + c['duracao']) for c in lista_clipes]
     traduziveis = [i for i, t in enumerate(trechos) if not t.startswith('(sobra de tempo')]
-    traducoes = [{'pt': None, 'sugestao': None} for _ in trechos]
+    traducoes = [{'pt': None, 'sugestao': None, 'busca_en': None} for _ in trechos]
     for i, t in zip(traduziveis, _traduzir([trechos[i] for i in traduziveis], com_sugestao=True)):
         traducoes[i] = t
 
@@ -650,9 +673,15 @@ def revisar_midia_pipeline(lista_clipes, texto_segmento, palavras_tempo, nome_se
             legenda += f"\n\n🇧🇷 \"{traducoes[i]['pt'][:330]}\""
         if traducoes[i]['sugestao']:
             legenda += f"\n\n💡 Mídia sugerida: {traducoes[i]['sugestao'][:160]}"
+        termo_busca = traducoes[i].get('busca_en') or traducoes[i]['sugestao']
+        if termo_busca and traducoes[i].get('busca_en'):
+            legenda += f"\n🔎 Busca: {termo_busca[:80]}"
 
-        enviar_midia(clipe['path'], legenda,
-                     botoes=[('✅ Aprovar', 'aprovar'), ('❌ Recusar', 'recusar')])
+        botoes_clipe = [('✅ Aprovar', 'aprovar'), ('❌ Recusar', 'recusar')]
+        url_pexels = _url_busca_pexels(termo_busca)
+        if url_pexels:
+            botoes_clipe = [botoes_clipe, [('🔎 Pesquisar no Pexels', 'url:' + url_pexels)]]
+        enviar_midia(clipe['path'], legenda, botoes=botoes_clipe)
 
         tipo, valor = _aguardar_callback_ou_midia(timeout_s=timeout_min * 60)
 
