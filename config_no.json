@@ -117,5 +117,11 @@
     "se_sem_resposta": "agora",
     "timeout_resposta_min": 60,
     "fuso_exibicao_extra": "Europe/Oslo"
-  }
+  },
+  "pexels_busca_telegram": {
+    "ativo": true,
+    "orientation": "landscape",
+    "min_duration": 10
+  },
+  "intro_com_audio": true
 }
