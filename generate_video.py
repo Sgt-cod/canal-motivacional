@@ -245,7 +245,9 @@ def _traduzir_para_ptbr(textos, com_sugestao=False):
     itens = json.dumps(list(textos), ensure_ascii=False)
     extra = ('  "sugestao": uma frase curta em PT-BR dizendo que imagem/vídeo combina com o trecho '
              '(ex: "vista aérea de um fiorde", "fábrica antiga abandonada"). Evite pedir '
-             'pessoas famosas ou marcas.\n') if com_sugestao else ''
+             'pessoas famosas ou marcas.\n'
+             '  "busca_en": a MESMA sugestão como termo de busca em INGLÊS pra banco de imagens '
+             '(2 a 5 palavras, concreto e visual, ex: "aerial view norwegian fjord").\n') if com_sugestao else ''
     prompt = f"""Traduza cada texto da lista JSON abaixo ({IDIOMA_CONTEUDO}) para português do Brasil.
 Tradução FIEL e natural, sem resumir nem acrescentar nada; mantenha nomes próprios, e
 escreva números por extenso como estão (não troque por dígitos) se for mais claro.
@@ -259,7 +261,8 @@ Retorne APENAS JSON, MESMA ORDEM E QUANTIDADE dos itens:
     dados = json.loads(_extrair_json_resposta(_gemini_generate(prompt).text))
     traducoes = dados.get('traducoes', [])
     return [{'pt': (t.get('pt') or '').strip() or None,
-             'sugestao': (t.get('sugestao') or '').strip() or None}
+             'sugestao': (t.get('sugestao') or '').strip() or None,
+             'busca_en': (t.get('busca_en') or '').strip() or None}
             for t in traducoes]
 
 
@@ -2137,8 +2140,10 @@ def montar_video_webdoc_por_capitulos(blocos_roteiro, tema, output_file, largura
             clip_bruto = clip_bruto.without_audio()
         return clip_bruto, caminho
 
+    # 'intro_com_audio': true mantém o som original do arquivo da intro (padrão: muda, como
+    # a vinheta do Convergência, que toca só com a música/narração ao redor).
     vinheta_clip, intro_path = _carregar_clip_de_pasta(config.get('pasta_intro', f'{ASSETS_DIR}/intro'), largura, altura,
-                                                         manter_audio=False)
+                                                         manter_audio=bool(config.get('intro_com_audio', False)))
     if vinheta_clip:
         print(f"  🎬 Vinheta: {os.path.basename(intro_path)}")
     else:
